@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <locale>
+#include <codecvt>
 
 class WordCleaner {
 private:
@@ -46,8 +47,7 @@ public:
         std::sort(vec.begin(), vec.end(), compare);
 
         std::wofstream file(output);
-        file.imbue(std::locale(""));
-
+        file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t>));
         if (!file.is_open()) {
             std::cout << "Not open output" << std::endl;
             return;
@@ -63,12 +63,10 @@ public:
     }
 };
 
-int main() {
-    std::locale::global(std::locale(""));
-
-    std::string File = "input.txt";
-    std::wifstream file(File);
-    file.imbue(std::locale());
+int main(int argc, char* argv[]) {
+    setlocale(LC_ALL, "Russian");
+    std::wifstream file(argv[1]);
+    file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t>));
     if (!file.is_open()) {
         std::cout << "Not open input" << std::endl;
         return 1;
@@ -85,9 +83,8 @@ int main() {
     }
 
     file.close();
-    std::string outputFile = "output.csv";
 
-    SortOutput::sort(Words, outputFile, count);
+    SortOutput::sort(Words, argv[2], count);
 
     return 0;
 }
