@@ -6,14 +6,11 @@
 #define LAB0_WORDCLEANER_H
 
 #include <string>
-#include <map>
 
 class WordCleaner {
-private:
-    static void list(const std::wstring& word, std::map<std::wstring, int>& Words);
-
 public:
-    static std::wstring clean(std::wstring word, std::map<std::wstring, int>& Words);
+    static std::wstring clean(std::wstring word);
+    static bool isCleanWord(const std::wstring& word);
 };
 
 #endif //LAB0_WORDCLEANER_H
