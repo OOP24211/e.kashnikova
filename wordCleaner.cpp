@@ -6,11 +6,7 @@
 #include <cwctype>
 #include <locale>
 
-void WordCleaner::list(const std::wstring& word, std::map<std::wstring, int>& Words) {
-        Words[word]++;
-}
-
-std::wstring WordCleaner::clean(std::wstring word, std::map<std::wstring, int>& Words) {
+std::wstring WordCleaner::clean(std::wstring word) {
     if (word[word.length() - 1] == L',' || word[word.length() - 1] == L'.' ||
         word[word.length() - 1] == L'!' || word[word.length() - 1] == L'?') {
         word.pop_back();
@@ -25,9 +21,9 @@ std::wstring WordCleaner::clean(std::wstring word, std::map<std::wstring, int>& 
         c = static_cast<wchar_t>(towlower(c));
     }
 
-    if (!word.empty()) {
-        list(word, Words);
-    }
-
     return word;
+}
+
+bool WordCleaner::isCleanWord(const std::wstring& word) {
+    return !word.empty();
 }
