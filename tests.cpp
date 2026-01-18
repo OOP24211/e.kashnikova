@@ -1,4 +1,3 @@
-// fibonacci_cache_test.cpp
 #include <gtest/gtest.h>
 #include "fibonacciwrapper.h"
 #include "LRU.h"
@@ -6,7 +5,6 @@
 #include "node.h"
 #include <stdexcept>
 
-// Тесты для класса Node
 TEST(NodeTest, ConstructorInitializesCorrectly) {
     Node node(1, 42);
     EXPECT_EQ(node.key, 1);
@@ -16,7 +14,6 @@ TEST(NodeTest, ConstructorInitializesCorrectly) {
     EXPECT_EQ(node.prev, nullptr);
 }
 
-// Тесты для LRU Cache
 class LRUCacheTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -48,7 +45,7 @@ TEST_F(LRUCacheTest, LRUEviction) {
     lru->put(1, 10);
     lru->put(2, 20);
     lru->put(3, 30);
-    lru->put(4, 40); // Должен вытеснить ключ 1
+    lru->put(4, 40); 
 
     EXPECT_EQ(lru->get(1), -1);
     EXPECT_EQ(lru->get(2), 20);
@@ -68,7 +65,6 @@ TEST_F(LRUCacheTest, UpdateExistingKey) {
     EXPECT_EQ(lru->get(1), 20);
 }
 
-// Тесты для LFU Cache
 class LFUCacheTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -101,16 +97,14 @@ TEST_F(LFUCacheTest, LFUEviction) {
     lfu->put(2, 20);
     lfu->put(3, 30);
 
-    // Используем ключи 2 и 3 несколько раз, чтобы увеличить их частоту
     lfu->get(2);
     lfu->get(3);
     lfu->get(2);
     lfu->get(3);
 
-    // Добавляем новый ключ - должен вытеснить ключ 1 (наименьшая частота)
     lfu->put(4, 40);
 
-    EXPECT_EQ(lfu->get(1), -1); // Должен быть вытеснен
+    EXPECT_EQ(lfu->get(1), -1); 
     EXPECT_EQ(lfu->get(2), 20);
     EXPECT_EQ(lfu->get(3), 30);
     EXPECT_EQ(lfu->get(4), 40);
@@ -136,17 +130,15 @@ TEST_F(LFUCacheTest, FrequencyUpdate) {
     lfu->get(1);
     lfu->get(2);
 
-    // Ключ 1 должен иметь частоту 3, ключ 2 - частоту 2
     lfu->put(3, 30);
-    lfu->put(4, 40); // Должен вытеснить ключ 2 (частота 2 < частоты 3)
+    lfu->put(4, 40); 
 
-    EXPECT_EQ(lfu->get(1), 10); // Должен остаться
-    EXPECT_EQ(lfu->get(2), -1); // Должен быть вытеснен
+    EXPECT_EQ(lfu->get(1), 10); 
+    EXPECT_EQ(lfu->get(2), -1); 
     EXPECT_EQ(lfu->get(3), 30);
     EXPECT_EQ(lfu->get(4), 40);
 }
 
-// Тесты для FibonacciWrapper
 class FibonacciWrapperTest : public ::testing::Test {
 protected:
     void SetUp() override {}
@@ -197,30 +189,25 @@ TEST_F(FibonacciWrapperTest, CalculateNegativeNumber) {
 TEST_F(FibonacciWrapperTest, CacheReuse) {
     FibonacciWrapper calculator(1);
 
-    // Первый вызов - вычисляем
     int firstResult = calculator.calculate(10);
 
-    // Второй вызов - должны получить из кэша
     int secondResult = calculator.calculate(10);
 
     EXPECT_EQ(firstResult, secondResult);
-    EXPECT_EQ(firstResult, 55); // fib(10) = 55
+    EXPECT_EQ(firstResult, 55); 
 }
 
 TEST_F(FibonacciWrapperTest, LargeNumberWithCache) {
     FibonacciWrapper calculator(1);
 
-    // Тестируем на достаточно большом числе, чтобы проверить работу кэша
     EXPECT_EQ(calculator.calculate(15), 610);
-    EXPECT_EQ(calculator.calculate(15), 610); // Должен быть из кэша
+    EXPECT_EQ(calculator.calculate(15), 610); 
 }
 
-// Интеграционные тесты
 TEST(IntegrationTest, MultipleFibonacciCalculations) {
     FibonacciWrapper lruCalculator(1);
     FibonacciWrapper lfuCalculator(2);
 
-    // Оба кэша должны давать одинаковые результаты
     for (int i = 0; i <= 10; ++i) {
         EXPECT_EQ(lruCalculator.calculate(i), lfuCalculator.calculate(i));
     }
@@ -229,8 +216,6 @@ TEST(IntegrationTest, MultipleFibonacciCalculations) {
 TEST(IntegrationTest, CachePerformance) {
     FibonacciWrapper calculator(1);
 
-    // Вычисляем последовательность Фибоначчи несколько раз
-    // Второй проход должен быть быстрее благодаря кэшу
     std::vector<int> results1, results2;
 
     for (int i = 0; i <= 10; ++i) {
@@ -244,7 +229,6 @@ TEST(IntegrationTest, CachePerformance) {
     EXPECT_EQ(results1, results2);
 }
 
-// Тест на правильность вычислений Фибоначчи
 TEST(FibonacciCorrectnessTest, First20Numbers) {
     FibonacciWrapper calculator(1);
 
