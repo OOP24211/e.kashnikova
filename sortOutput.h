@@ -14,7 +14,7 @@ private:
                         const std::pair<std::wstring, int>& word2);
 
 public:
-    static void sort(std::map<std::wstring, int>& Words,
+    static void sort(const std::map<std::wstring, int>& Words,
                      const std::string& output, int count);
 };
 
