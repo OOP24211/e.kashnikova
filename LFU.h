@@ -5,21 +5,18 @@
 #ifndef LAB1OOP_LFU_H
 #define LAB1OOP_LFU_H
 
-
 #include "icache.h"
 #include "node.h"
 #include <unordered_map>
+#include <list>
 
 class LFUCache : public ICache {
 private:
     int capacity;
-    std::unordered_map<int, Node *> cacheMap;
-    std::unordered_map<int, std::pair<Node *, Node *>> freqMap;
     int minFreq;
-
-    void add(Node *node, int freq);
-    void remove(Node *node);
-    void updateFreq(Node *node);
+    std::unordered_map<int, Node*> cache;  
+    std::unordered_map<int, std::list<Node*>> freqMap; 
+    std::unordered_map<int, std::list<Node*>::iterator> iterMap; 
 
 public:
     LFUCache(int capacity);
