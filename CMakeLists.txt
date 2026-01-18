@@ -3,10 +3,8 @@ project(pacman)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Указываем путь к SFML
 set(SFML_PATH "C:/Users/Эвелина/CLionProjects/pacman/SFML-2.6.2")
 
-# Проверяем, какая версия SFML у нас
 if(EXISTS "${SFML_PATH}/lib/libsfml-graphics.a")
     set(SFML_IS_MINGW TRUE)
     message(STATUS "Found MinGW version of SFML")
@@ -14,7 +12,6 @@ else()
     message(FATAL_ERROR "SFML MinGW libraries not found!")
 endif()
 
-# Для Debug/Release выбираем правильные библиотеки
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(SFML_GRAPHICS_LIB "${SFML_PATH}/lib/libsfml-graphics-d.a")
     set(SFML_WINDOW_LIB "${SFML_PATH}/lib/libsfml-window-d.a")
@@ -31,7 +28,6 @@ else()
     set(SFML_SYSTEM_DLL "${SFML_PATH}/bin/sfml-system-2.dll")
 endif()
 
-# Добавляем исполняемый файл
 add_executable(pacman main.cpp GameMap.cpp
         Pacman.cpp
         Pacman.h
@@ -42,10 +38,8 @@ add_executable(pacman main.cpp GameMap.cpp
         Game.cpp
         Game.h)
 
-# Подключаем заголовочные файлы
 target_include_directories(pacman PRIVATE "${SFML_PATH}/include")
 
-# Ищем библиотеку freetype (которая идёт с SFML)
 find_library(FREETYPE_LIB
         NAMES freetype libfreetype freetype6 libfreetype-6
         PATHS "${SFML_PATH}/lib"
@@ -55,27 +49,23 @@ find_library(FREETYPE_LIB
 if(FREETYPE_LIB)
     message(STATUS "Found freetype: ${FREETYPE_LIB}")
 else()
-    # Если не нашли в папке SFML, ищем в системе
     find_library(FREETYPE_LIB freetype)
     if(NOT FREETYPE_LIB)
-        # Если вообще не нашли, пропускаем (SFML может работать без неё)
         message(WARNING "Freetype library not found, trying without it...")
         set(FREETYPE_LIB "")
     endif()
 endif()
 
-# Подключаем библиотеки для MinGW
 target_link_libraries(pacman
         ${SFML_GRAPHICS_LIB}
         ${SFML_WINDOW_LIB}
         ${SFML_SYSTEM_LIB}
         opengl32
-        ${FREETYPE_LIB}  # Может быть пустым
+        ${FREETYPE_LIB}  
         winmm
         gdi32
 )
 
-# Копируем DLL файлы
 add_custom_command(TARGET pacman POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${SFML_GRAPHICS_DLL}"
