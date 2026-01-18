@@ -1,5 +1,5 @@
-#include "wordCleaner.h"
 #include "sortOutput.h"
+#include "wordCounter.h"
 #include <iostream>
 #include <fstream>
 #include <locale>
@@ -15,29 +15,25 @@ int main(int argc, char* argv[]) {
     }
 
     std::wifstream file(argv[1]);
-    file.imbue(std::locale(file.getloc(), std::make_unique<std::codecvt_utf8<wchar_t>>().get()));
+    auto converter = std::make_unique<std::codecvt_utf8<wchar_t>>();
+    file.imbue(std::locale(file.getloc(), converter.get()));
     if (!file.is_open()) {
         std::cout << "Not open input" << std::endl;
         return 1;
     }
 
-    std::map<std::wstring, int> Words;
-    int count = 0;
+    WordCounter counter;
     std::wstring word;
 
     while (file >> word) {
-        count++;
-        if (!word.empty()) {
-            std::wstring cleanWord = WordCleaner::clean(word, Words);
-        }
+        counter.addRawWord(word);
     }
 
-    file.close();
-    SortOutput::sort(Words, argv[2], count);
+    const auto& words = counter.getWords();
+    int totalWords = counter.getTotalWords();
 
-    return 0;
-}
-    SortOutput::sort(Words, argv[2], count);
+    file.close();
+    SortOutput::sort(words, argv[2], totalWords);
 
     return 0;
 }
