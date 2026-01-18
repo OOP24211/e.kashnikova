@@ -10,29 +10,36 @@
 #include <locale>
 #include <codecvt>
 #include <memory>
+#include <iomanip>
 
 bool SortOutput::compare(const std::pair<std::wstring, int>& word1,
                          const std::pair<std::wstring, int>& word2) {
-    return word1.second > word2.second;
+    if (word1.second != word2.second) {
+        return word1.second > word2.second;
+    }
+    return word1.first < word2.first;
 }
 
-void SortOutput::sort(std::map<std::wstring, int>& Words,
+void SortOutput::sort(const std::map<std::wstring, int>& Words,
                       const std::string& output, int count) {
     std::vector<std::pair<std::wstring, int>> vec(Words.begin(), Words.end());
     std::sort(vec.begin(), vec.end(), compare);
 
     std::wofstream file(output);
-    file.imbue(std::locale(file.getloc(), std::make_unique<std::codecvt_utf8<wchar_t>>().get()));
+    auto converter = std::make_unique<std::codecvt_utf8<wchar_t>>();
+    file.imbue(std::locale(file.getloc(), converter.get()));
+
     if (!file.is_open()) {
         std::cout << "Not open output" << std::endl;
         return;
     }
 
-    file << L"Слово; Частота; Частота(в%)\n";
+    file << L"Слово; Частота; Частота(%)\n";
 
     for (const auto& pair : vec) {
+        double percentage = (count > 0) ? ((double)pair.second / count * 100) : 0.0;
         file << pair.first << L";" << pair.second << L";"
-             << (((double)pair.second / count) * 100) << L"%\n";
+             << std::fixed << std::setprecision(2) << percentage << L"%\n";
     }
 
     file.close();
