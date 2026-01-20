@@ -3,7 +3,7 @@ project(CacheTests)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(run_tests tests.cpp node.cpp LRU.cpp LFU.cpp fibonacciwrapper.cpp icache.cpp
+add_executable(run_tests tests.cpp node.cpp LRU.cpp LFU.cpp fibwrapper.cpp icache.cpp
         LFU.cpp
         LFU.h
         LRU.cpp
