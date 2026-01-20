@@ -2,7 +2,7 @@
 // Created by Эвелина on 18.11.2025.
 //
 
-#include "fibonacciwrapper.h"
+#include "fibwrapper.h"
 #include "LRU.h"
 #include "LFU.h"
 #include <stdexcept>
