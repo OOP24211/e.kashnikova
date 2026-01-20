@@ -1,5 +1,5 @@
 #include <iostream>
-#include "fibonacciwrapper.h"
+#include "fibwrapper.h"
 
 using namespace std;
 
